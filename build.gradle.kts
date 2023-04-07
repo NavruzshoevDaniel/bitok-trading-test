@@ -21,6 +21,7 @@ repositories {
 
 extra["springCloudVersion"] = "2022.0.1"
 extra["testcontainersVersion"] = "1.17.6"
+extra["mockitoVersion"] = "4.8.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -44,6 +45,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:kafka")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.mockito:mockito-inline:${property("mockitoVersion")}")
 }
 
 dependencyManagement {

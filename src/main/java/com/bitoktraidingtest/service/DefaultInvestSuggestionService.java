@@ -6,6 +6,7 @@ import com.bitoktraidingtest.client.dto.HistoricalBtcPrice;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDate;
 
 @Service
@@ -13,10 +14,11 @@ import java.time.LocalDate;
 public class DefaultInvestSuggestionService implements InvestSuggestionService {
 
     private final CoinGeckoClient coinGeckoClient;
+    private final Clock clock;
 
     @Override
     public boolean shouldInvest() {
-        final var now = LocalDate.now();
+        final var now = LocalDate.now(clock);
         final BtcCurrentPrice currentBtcPriceInUsdData = coinGeckoClient.getCurrentBtcPriceInUsd();
         final HistoricalBtcPrice historicalBtcPriceInUsdData = coinGeckoClient.getHistoricalBtcPriceInUsd(now.minusDays(1));
 
