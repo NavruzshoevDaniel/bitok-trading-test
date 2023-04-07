@@ -24,7 +24,7 @@ extra["testcontainersVersion"] = "1.17.6"
 extra["mockitoVersion"] = "4.8.1"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    //implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.apache.kafka:kafka-streams")
     implementation("org.liquibase:liquibase-core")
@@ -46,6 +46,7 @@ dependencies {
     testImplementation("org.testcontainers:kafka")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.mockito:mockito-inline:${property("mockitoVersion")}")
+    testImplementation("org.springframework.boot:spring-boot-starter-webflux")//for WebTestClient
 }
 
 dependencyManagement {
