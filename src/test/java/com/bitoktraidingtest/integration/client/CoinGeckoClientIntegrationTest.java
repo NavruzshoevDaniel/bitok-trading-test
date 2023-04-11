@@ -1,6 +1,7 @@
 package com.bitoktraidingtest.integration.client;
 
 import com.bitoktraidingtest.client.CoinGeckoClient;
+import com.bitoktraidingtest.client.dto.BtcCurrentPrice;
 import com.bitoktraidingtest.client.dto.HistoricalBtcPrice;
 import com.bitoktraidingtest.client.dto.UsdPrice;
 import org.junit.jupiter.api.Assertions;
@@ -50,5 +51,25 @@ class CoinGeckoClientIntegrationTest {
         final UsdPrice usdPrice = marketData.getUsdPrice();
         Assertions.assertNotNull(usdPrice);
         Assertions.assertEquals(22220.070997481067, usdPrice.getPrice());
+    }
+
+    @Test
+    void getCurrentBtcPrice() {
+        //Given
+        stubFor(
+                get(urlEqualTo("/simple/price?vs_currencies=usd&ids=bitcoin"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(HttpStatus.OK.value())
+                                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                                        .withBodyFile("currentPrice.json")
+                        )
+        );
+        //When
+        final BtcCurrentPrice btcCurrentPrice = coinGeckoClient.getCurrentBtcPriceInUsd();
+        //Then
+        final UsdPrice usdPrice = btcCurrentPrice.getUsdPrice();
+        Assertions.assertNotNull(usdPrice);
+        Assertions.assertEquals(30121, usdPrice.getPrice());
     }
 }
