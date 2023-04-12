@@ -1,0 +1,19 @@
+@startuml
+autonumber
+
+actor User as user
+participant InvestController as investController
+participant InvestSuggestionService as investSuggestionService
+participant CoinGeckoClient as coinGeckoClient
+
+user->investController: GET /should-invest
+investController->investSuggestionService: shouldInvest()
+
+investSuggestionService->coinGeckoClient: GET https://api.coingecko.com\n/api/v3/simple/price?vs_currencies=usd&ids=bitcoin
+coinGeckoClient-->investSuggestionService: Response
+investSuggestionService->coinGeckoClient: GET https://api.coingecko.com\n/api/v3/coins/bitcoin/history?date=15-02-2023
+coinGeckoClient-->investSuggestionService: Response
+
+investSuggestionService-->investController: true/false
+investController-->user: Response
+@enduml
