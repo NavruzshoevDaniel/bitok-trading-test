@@ -1,10 +1,10 @@
 package com.bitoktraidingtest.integration.web;
 
+import com.bitoktraidingtest.BaseIntegrationTest;
 import com.bitoktraidingtest.controller.InvestController;
 import com.bitoktraidingtest.service.InvestSuggestionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,8 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class InvestControllerIntegrationTest {
+class InvestControllerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;

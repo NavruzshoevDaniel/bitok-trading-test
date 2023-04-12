@@ -1,5 +1,6 @@
 package com.bitoktraidingtest.component;
 
+import com.bitoktraidingtest.BaseIntegrationTest;
 import com.bitoktraidingtest.client.CoinGeckoClient;
 import com.bitoktraidingtest.client.dto.BtcCurrentPrice;
 import com.bitoktraidingtest.client.dto.HistoricalBtcPrice;
@@ -10,17 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -29,11 +26,7 @@ import java.time.Month;
 
 import static org.mockito.Mockito.when;
 
-@Testcontainers
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class InvestControllerComponentTestV2 {
+class InvestControllerComponentTestV2 extends BaseIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;
