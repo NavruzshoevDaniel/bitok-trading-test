@@ -6,7 +6,6 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
@@ -21,8 +20,6 @@ import java.time.Instant;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 
-@AutoConfigureWireMock(port = 0, files = "classpath:/integration")
-@TestPropertySource(properties = "client.rest.feign.coingecko.url=http://localhost:${wiremock.server.port}")
 class InvestControllerComponentTestV1 extends BaseIntegrationTest {
 
     @Autowired

@@ -1,5 +1,6 @@
 package com.bitoktraidingtest.integration.client;
 
+import com.bitoktraidingtest.BaseIntegrationTest;
 import com.bitoktraidingtest.client.CoinGeckoClient;
 import com.bitoktraidingtest.client.dto.BtcCurrentPrice;
 import com.bitoktraidingtest.client.dto.HistoricalBtcPrice;
@@ -7,25 +8,15 @@ import com.bitoktraidingtest.client.dto.UsdPrice;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
 import java.time.Month;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-@SpringBootTest(classes = FeignClientTestConfiguration.class)
-/*
-testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock") нужна эта зависимость,
-но в данном build.gradle она подтягивается из spring-cloud-starter-contract
-*/
-@AutoConfigureWireMock(port = 0, files = "classpath:/integration")
-@TestPropertySource(properties = "client.rest.feign.coingecko.url=http://localhost:${wiremock.server.port}")
-class CoinGeckoClientIntegrationTest {
+class CoinGeckoClientIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private CoinGeckoClient coinGeckoClient;
