@@ -1,0 +1,17 @@
+@startuml
+autonumber
+
+actor User as user
+participant InvestController as investController
+participant InvestSuggestionService as investSuggestionService
+participant UserInvestEntityRepository as userInvestRepo
+
+user->investController: GET /invest?userId=1&page=0...
+investController->investSuggestionService: findAllUsersInvests(String userId,Pageable pageable)
+
+investSuggestionService->userInvestRepo: findAllByUserId(String userId, Pageable pageable)
+userInvestRepo-->investSuggestionService: Page<UserInvestEntity>
+
+investSuggestionService-->investController: Page<UserInvestEntity>
+investController-->user: Page<UserInvestEntity>
+@enduml
