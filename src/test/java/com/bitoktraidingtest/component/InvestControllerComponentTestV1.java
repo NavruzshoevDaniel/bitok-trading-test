@@ -2,7 +2,10 @@ package com.bitoktraidingtest.component;
 
 import com.bitoktraidingtest.BaseIntegrationTest;
 import com.bitoktraidingtest.controller.InvestController;
+import com.bitoktraidingtest.entity.UserInvestEntity;
+import com.bitoktraidingtest.repository.UserInvestEntityRepository;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -11,19 +14,25 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-
+@Sql(value = "/integration/db/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class InvestControllerComponentTestV1 extends BaseIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private UserInvestEntityRepository userInvestEntityRepository;
 
     @Test
     void shouldInvestTest() {
@@ -60,6 +69,38 @@ class InvestControllerComponentTestV1 extends BaseIntegrationTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .json(response);
+    }
+
+    @Test
+    void investTest() {
+        //Given
+        final String request = """
+                {
+                    "userId": "1",
+                    "amount": 504.5
+                }
+                """;
+        final String response = """
+                {
+                    "id":1,
+                    "userId": "1",
+                    "amount":504.5
+                }
+                """;
+
+        //When & Then
+        webTestClient.post()
+                .uri(InvestController.INVEST_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .json(response);
+        final List<UserInvestEntity> investEntities = userInvestEntityRepository.findAll();
+        Assertions.assertEquals(1, investEntities.size());
+        var userInvestEntity = investEntities.get(0);
+        Assertions.assertEquals(new UserInvestEntity(1L, "1", 504.5), userInvestEntity);
     }
 
     @TestConfiguration

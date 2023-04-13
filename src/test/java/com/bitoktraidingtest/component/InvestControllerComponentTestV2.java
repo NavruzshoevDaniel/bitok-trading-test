@@ -6,6 +6,8 @@ import com.bitoktraidingtest.client.dto.BtcCurrentPrice;
 import com.bitoktraidingtest.client.dto.HistoricalBtcPrice;
 import com.bitoktraidingtest.client.dto.UsdPrice;
 import com.bitoktraidingtest.controller.InvestController;
+import com.bitoktraidingtest.entity.UserInvestEntity;
+import com.bitoktraidingtest.repository.UserInvestEntityRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,16 +19,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-
+@Sql(value = "/integration/db/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class InvestControllerComponentTestV2 extends BaseIntegrationTest {
 
     @Autowired
@@ -34,6 +40,9 @@ class InvestControllerComponentTestV2 extends BaseIntegrationTest {
 
     @MockBean
     private CoinGeckoClient coinGeckoClient;
+
+    @Autowired
+    private UserInvestEntityRepository userInvestEntityRepository;
 
     @Captor
     private ArgumentCaptor<LocalDate> localDateArgumentCaptor;
@@ -67,6 +76,38 @@ class InvestControllerComponentTestV2 extends BaseIntegrationTest {
                 .json(response);
         final var argumentCaptorValue = localDateArgumentCaptor.getValue();
         Assertions.assertEquals(LocalDate.of(2023, Month.FEBRUARY, 4), argumentCaptorValue);
+    }
+
+    @Test
+    void investTest() {
+        //Given
+        final String request = """
+                {
+                    "userId": "1",
+                    "amount": 504.5
+                }
+                """;
+        final String response = """
+                {
+                    "id":1,
+                    "userId": "1",
+                    "amount":504.5
+                }
+                """;
+
+        //When & Then
+        webTestClient.post()
+                .uri(InvestController.INVEST_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .json(response);
+        final List<UserInvestEntity> investEntities = userInvestEntityRepository.findAll();
+        Assertions.assertEquals(1, investEntities.size());
+        var userInvestEntity = investEntities.get(0);
+        Assertions.assertEquals(new UserInvestEntity(1L, "1", 504.5), userInvestEntity);
     }
 
     @TestConfiguration
