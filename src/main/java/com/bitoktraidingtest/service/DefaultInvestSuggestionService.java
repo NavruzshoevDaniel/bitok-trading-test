@@ -3,8 +3,12 @@ package com.bitoktraidingtest.service;
 import com.bitoktraidingtest.client.CoinGeckoClient;
 import com.bitoktraidingtest.client.dto.BtcCurrentPrice;
 import com.bitoktraidingtest.client.dto.HistoricalBtcPrice;
+import com.bitoktraidingtest.domain.InvestRequest;
+import com.bitoktraidingtest.entity.UserInvestEntity;
+import com.bitoktraidingtest.repository.UserInvestEntityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -15,6 +19,7 @@ public class DefaultInvestSuggestionService implements InvestSuggestionService {
 
     private final CoinGeckoClient coinGeckoClient;
     private final Clock clock;
+    private final UserInvestEntityRepository userInvestEntityRepository;
 
     @Override
     public boolean shouldInvest() {
@@ -30,5 +35,14 @@ public class DefaultInvestSuggestionService implements InvestSuggestionService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    @Transactional
+    public UserInvestEntity invest(InvestRequest investRequest) {
+        final var userInvestEntity = new UserInvestEntity();
+        userInvestEntity.setUserId(investRequest.getUserId());
+        userInvestEntity.setAmount(investRequest.getAmount());
+        return userInvestEntityRepository.save(userInvestEntity);
     }
 }
