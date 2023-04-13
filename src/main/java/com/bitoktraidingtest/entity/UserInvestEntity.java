@@ -1,16 +1,15 @@
 package com.bitoktraidingtest.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "user_invest")
 public class UserInvestEntity {
     @Id
