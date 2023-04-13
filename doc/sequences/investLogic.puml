@@ -1,0 +1,17 @@
+@startuml
+autonumber
+
+actor User as user
+participant InvestController as investController
+participant InvestSuggestionService as investSuggestionService
+participant UserInvestEntityRepository as userInvestRepo
+
+user->investController: POST /invest
+investController->investSuggestionService: invest(UserInvestRequest)
+
+investSuggestionService->userInvestRepo: save(UserInvestEntity)
+userInvestRepo-->investSuggestionService: UserInvestEntity with id
+
+investSuggestionService-->investController: UserInvestEntity with id
+investController-->user: UserInvestEntity with id
+@enduml
