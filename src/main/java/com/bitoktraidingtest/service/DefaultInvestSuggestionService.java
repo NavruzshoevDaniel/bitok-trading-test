@@ -7,6 +7,8 @@ import com.bitoktraidingtest.domain.InvestRequest;
 import com.bitoktraidingtest.entity.UserInvestEntity;
 import com.bitoktraidingtest.repository.UserInvestEntityRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,5 +46,11 @@ public class DefaultInvestSuggestionService implements InvestSuggestionService {
         userInvestEntity.setUserId(investRequest.getUserId());
         userInvestEntity.setAmount(investRequest.getAmount());
         return userInvestEntityRepository.save(userInvestEntity);
+    }
+
+    @Override
+    @Transactional
+    public Page<UserInvestEntity> findAllUsersInvests(String userId, Pageable pageable) {
+        return userInvestEntityRepository.findAllByUserId(userId, pageable);
     }
 }

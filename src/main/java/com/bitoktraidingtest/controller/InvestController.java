@@ -6,10 +6,9 @@ import com.bitoktraidingtest.entity.UserInvestEntity;
 import com.bitoktraidingtest.service.InvestSuggestionService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -30,5 +29,10 @@ public class InvestController {
     @PostMapping(INVEST_PATH)
     public UserInvestEntity invest(@RequestBody @Valid InvestRequest investRequest) {
         return investSuggestionService.invest(investRequest);
+    }
+
+    @GetMapping(INVEST_PATH)
+    public Page<UserInvestEntity> invest(@RequestParam String userId, Pageable pageable) {
+        return investSuggestionService.findAllUsersInvests(userId, pageable);
     }
 }
